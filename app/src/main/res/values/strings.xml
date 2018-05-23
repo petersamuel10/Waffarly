@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Waffarly</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="category">
+        <item>Clothes</item>
+        <item>Shoes</item>
+        <item>Laptop</item>
+        <item>Electronics</item>
+        <item>Mobile</item>
+        <item>Super Market</item>
+    </string-array>
+</resources>

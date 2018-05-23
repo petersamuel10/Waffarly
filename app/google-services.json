@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "72910515465",
+    "firebase_url": "https://waffarly-a42ad.firebaseio.com",
+    "project_id": "waffarly-a42ad",
+    "storage_bucket": "waffarly-a42ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72910515465:android:28434f73994c10b9",
+        "android_client_info": {
+          "package_name": "com.example.jesus.waffarly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72910515465-n488h5np4jg7l4milomh00qkvo8a1leo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-RQr3mQyqKS6tUpTAPLKbmp7ZELXXV2I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

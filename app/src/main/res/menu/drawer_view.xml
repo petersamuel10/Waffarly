@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<group android:checkableBehavior="single" >
+    <item android:id="@+id/home"   android:checked="true"   android:title="Home" />
+    <item android:id="@+id/clothes" android:title="Clothes" android:checkable="true"/>
+    <item android:id="@+id/shoes" android:title="Shoes" android:checkable="true" />
+    <item android:id="@+id/laptop" android:title="Laptop" android:checkable="true"/>
+    <item android:id="@+id/electronics" android:title="Electronics" android:checkable="true"/>
+    <item android:id="@+id/mobile" android:title="Mobile" android:checkable="true"/>
+    <item android:id="@+id/superMarket" android:title="Super Market" android:checkable="true"/>
+</group>
+    <group android:checkableBehavior="single" >
+        <item android:id="@+id/add" android:title="Add an Offer" />
+        <item android:id="@+id/logout" android:title="Logout"/>
+    </group>
+</menu>
