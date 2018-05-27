@@ -1,20 +1,27 @@
 package com.example.jesus.waffarly;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-public class Item_Details extends AppCompatActivity {
+public class Item_Details extends AppCompatActivity implements View.OnClickListener{
 
     private ImageView image;
     private TextView name;
     private TextView description;
     private TextView address;
+    private ImageView location;
+    Double longitude = 0.0;
+    Double latitude = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +33,7 @@ public class Item_Details extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //reference
         reference();
+        location.setOnClickListener(this);
     }
 
     private void reference() {
@@ -33,6 +41,7 @@ public class Item_Details extends AppCompatActivity {
         name         = (TextView)findViewById(R.id.shop_name);
         description  = (TextView)findViewById(R.id.item_description);
         address      = (TextView)findViewById(R.id.address);
+        location     = (ImageView) findViewById(R.id.locationSite);
     }
 
     @Override
@@ -44,6 +53,14 @@ public class Item_Details extends AppCompatActivity {
         description.setText(item[2]);
         address.setText(item[3]);
         Glide.with(getApplication()).load(item[0]).into(image);
+
+        try {
+            longitude = Double.parseDouble(item[4]);
+            latitude = Double.parseDouble(item[5]);
+        }catch (Exception e)
+        {
+            Log.e("errorrr",e.getMessage().toString());
+        }
     }
 
     @Override
@@ -56,5 +73,13 @@ public class Item_Details extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        String geoUri = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude;
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+            startActivity(mapIntent);
+
     }
 }

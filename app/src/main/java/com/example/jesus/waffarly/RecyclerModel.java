@@ -11,21 +11,22 @@ public class RecyclerModel {
     private String summary;
     private String description;
     private String address;
-   // private String location;
+    private String longitude;
+    private String latitude;
 
     public RecyclerModel()
     {
 
     }
-
-    public RecyclerModel(String image, String name, String summary, String description, String address) {
+    public RecyclerModel(String image, String name, String summary, String description, String address, String longitude, String latitude) {
         this.image = image;
         this.name = name;
         this.summary = summary;
         this.description = description;
         this.address = address;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
-
     public String getImage() {
         return image;
     }
@@ -66,5 +67,19 @@ public class RecyclerModel {
         this.address = address;
     }
 
+    public String getLongitude() {
+        return longitude;
+    }
 
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
 }

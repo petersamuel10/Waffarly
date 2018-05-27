@@ -56,12 +56,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView summary = holder.item_summary;
         summary.setText(item_data.getSummary());
 
-        holder.item_view.setOnClickListener(new View.OnClickListener() {
+        // send item details and open it when click on item recycler view
+         holder.item_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent item_details = new Intent(mContext,Item_Details.class);
                 item_details.putExtra("item",
-                        new String[]{item_data.getImage(),item_data.getName(),item_data.getDescription(),item_data.getAddress()});
+                        new String[]{item_data.getImage(),item_data.getName(),item_data.getDescription()
+                                ,item_data.getAddress(),item_data.getLongitude(),item_data.getLatitude()});
                 mContext.startActivity(item_details);
             }
         });

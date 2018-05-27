@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         //check login
        ifLogin();
-
+        FirebaseMessaging.getInstance().subscribeToTopic("notifications");
         // Set a Toolbar to replace the ActionBar.
         setSupportActionBar(toolbar);
 

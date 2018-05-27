@@ -102,10 +102,10 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
         description = descriptionEt.getText().toString();
         summary = summaryEt.getText().toString();
         address = addressEt.getText().toString();
-
+        getLocation();
         // set OnClick Actions
         imageView.setOnClickListener(this);
-        getLocation();
+        location.setOnClickListener(this);
         add.setOnClickListener(this);
 
         return v;
@@ -122,7 +122,7 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
 
             case R.id.location:
                 //get Longitude and Latitude for the company location
-                getLocation();
+                ConfigureButton();
                 break;
 
             case R.id.add:
@@ -157,6 +157,8 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
                             offer_details.put("description", description);
                             offer_details.put("summary", summary);
                             offer_details.put("address", address);
+                            offer_details.put("longitude", longitude);
+                            offer_details.put("latitude", latitude);
 
                             firestore.collection(categoryName).document(name).set(offer_details).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -193,15 +195,13 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
 
     //get Longitude and Latitude for the company location
     private void getLocation() {
-
-
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
                 longitude = String.valueOf(location.getLongitude());
-                Toast.makeText(getContext(), longitude, Toast.LENGTH_LONG).show();
+                latitude  = String.valueOf(location.getLatitude());
             }
 
             @Override
@@ -225,7 +225,8 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
                     Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET
             }, 10);
             return;
-        } else {
+        }else
+        {
             ConfigureButton();
         }
     }
@@ -242,9 +243,6 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
     }
 
     private void ConfigureButton() {
-        location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
                         PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
@@ -257,8 +255,7 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
                     return;
                 }
                 locationManager.requestLocationUpdates("gps", 1000, 0, locationListener);
-            }
-        });
+               // Toast.makeText(getContext(), longitude+"/"+latitude, Toast.LENGTH_LONG).show();
     }
 
 
@@ -293,7 +290,7 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
         });
         takePicture.show();
     }
-
+// result activity for taking pic from gallery or camera
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

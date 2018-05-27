@@ -44,5 +44,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:11.8.0'
     implementation 'com.firebaseui:firebase-ui-storage:0.6.0'
     implementation 'com.android.support:multidex:1.0.3'
+    // for firebase messaging
+    implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    // for firebase database
 }
 apply plugin: 'com.google.gms.google-services'
