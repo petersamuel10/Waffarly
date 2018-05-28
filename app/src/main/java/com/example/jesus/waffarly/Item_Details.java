@@ -20,8 +20,8 @@ public class Item_Details extends AppCompatActivity implements View.OnClickListe
     private TextView description;
     private TextView address;
     private ImageView location;
-    Double longitude = 0.0;
-    Double latitude = 0.0;
+    Float longitude = 0.0f;
+    Float latitude = 0.0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +55,8 @@ public class Item_Details extends AppCompatActivity implements View.OnClickListe
         Glide.with(getApplication()).load(item[0]).into(image);
 
         try {
-            longitude = Double.parseDouble(item[4]);
-            latitude = Double.parseDouble(item[5]);
+            longitude = Float.valueOf(item[4]);
+            latitude = Float.valueOf(item[5]);
         }catch (Exception e)
         {
             Log.e("errorrr",e.getMessage().toString());
