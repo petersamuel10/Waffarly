@@ -27,15 +27,15 @@ import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
-    CircleImageView profile;
-    EditText register_user_name;
-    EditText register_email;
-    EditText register_password ;
-    Button create_account;
-    Button back_to_login;
+    CircleImageView profileImage;
+    EditText registerUserName;
+    EditText registerEmail;
+    EditText registerPassword ;
+    Button createAccount;
+    Button backToLogin;
     ProgressDialog progress;
     private static final int PICK_IMAGE =1 ;
-    private static Uri profile_Uri;
+    private static Uri profileUri;
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
     private DatabaseReference database;
@@ -56,11 +56,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     protected void onStart() {
         super.onStart();
         //choose profile picture
-        profile.setOnClickListener(this);
+        profileImage.setOnClickListener(this);
         //register button
-        create_account.setOnClickListener(this);
+        createAccount.setOnClickListener(this);
         //back to login page
-        back_to_login.setOnClickListener(this);
+        backToLogin.setOnClickListener(this);
 
 
     }
@@ -71,9 +71,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         switch (view.getId()) {
             case R.id.save: {
 
-                name = register_user_name.getText().toString();
-                email = register_email.getText().toString();
-                password = register_password.getText().toString();
+                name = registerUserName.getText().toString();
+                email = registerEmail.getText().toString();
+                password = registerPassword.getText().toString();
 
                 try {
 
@@ -89,7 +89,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                     final String user_id = mAuth.getCurrentUser().getUid();
 
                                     StorageReference ref = storageReference.child("images/" + user_id + ".jpg");
-                                    ref.putFile(profile_Uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                    ref.putFile(profileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
@@ -139,18 +139,18 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==PICK_IMAGE)
         {
-            profile_Uri = data.getData();
-            profile.setImageURI(profile_Uri);
+            profileUri = data.getData();
+            profileImage.setImageURI(profileUri);
         }
     }
 
     private void reference() {
-        profile = (CircleImageView)findViewById(R.id.profile);
-        register_user_name =(EditText)findViewById(R.id.name);
-        register_email =(EditText)findViewById(R.id.email);
-        register_password =(EditText)findViewById(R.id.password);
-        create_account = (Button)findViewById(R.id.save);
-        back_to_login = (Button)findViewById(R.id.cancel);
+        profileImage = findViewById(R.id.profile);
+        registerUserName =findViewById(R.id.name);
+        registerEmail =findViewById(R.id.email);
+        registerPassword = findViewById(R.id.password);
+        createAccount = findViewById(R.id.save);
+        backToLogin = findViewById(R.id.cancel);
         mAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         database = FirebaseDatabase.getInstance().getReference();

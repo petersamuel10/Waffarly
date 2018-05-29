@@ -20,11 +20,8 @@ import java.util.ArrayList;
 
 public class Laptop extends Fragment {
 
-    View view;
- //   private ArrayList<RecyclerModel> laptopList;
+    private View view;
     private RecyclerView laptopRecyclerView;
-  //  private RecyclerViewAdapter RecyclerAdapter;
-  //  private FirebaseFirestore firestore;
     MainRecyclerView m = new MainRecyclerView();
 
 
@@ -33,10 +30,7 @@ public class Laptop extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.laptop, container, false);
-        laptopRecyclerView = (RecyclerView)view.findViewById(R.id.laptopRecyclerView);
-      //  laptopList  = new ArrayList<>();
-      //  firestore = FirebaseFirestore.getInstance();
-       // RecyclerAdapter = new RecyclerViewAdapter(container.getContext(),laptopList);
+        laptopRecyclerView = view.findViewById(R.id.laptopRecyclerView);
         laptopRecyclerView.setHasFixedSize(true);
         laptopRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
         laptopRecyclerView.setAdapter(m.getRecycler(container.getContext()));
@@ -47,29 +41,6 @@ public class Laptop extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
         m.getData("Laptop",getActivity());
-        // clear the list to prevent repeated users
-        // and get all users for first time
-       // laptopList.clear();
-
-        /*
-        firestore.collection("Laptop").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-
-                // check if new account is saved in the firebase collection
-                for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-
-                    if (doc.getType() == DocumentChange.Type.ADDED)
-                    {
-                        RecyclerModel model = doc.getDocument().toObject(RecyclerModel.class);
-                        laptopList.add(model);
-                        RecyclerAdapter.notifyDataSetChanged();
-                    }
-                }
-                }
-        });
-        */
     }
 }

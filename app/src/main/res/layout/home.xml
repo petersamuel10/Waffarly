@@ -37,7 +37,7 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/border"
                     android:scaleType="fitXY"
-                    app:srcCompat="@mipmap/clothes" />
+                    app:srcCompat="@drawable/clothes" />
 
             </RelativeLayout>
 
@@ -54,7 +54,7 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/border"
                     android:scaleType="fitXY"
-                    app:srcCompat="@mipmap/shoes" />
+                    app:srcCompat="@drawable/shoes" />
 
             </RelativeLayout>
 
@@ -81,7 +81,7 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/border"
                     android:scaleType="centerCrop"
-                    app:srcCompat="@mipmap/laptop" />
+                    app:srcCompat="@drawable/laptop" />
 
             </RelativeLayout>
 
@@ -98,7 +98,7 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/border"
                     android:scaleType="fitXY"
-                    app:srcCompat="@mipmap/mm" />
+                    app:srcCompat="@drawable/mm" />
 
             </RelativeLayout>
 
@@ -126,7 +126,7 @@
                     android:background="@drawable/border"
 
                     android:scaleType="fitXY"
-                    app:srcCompat="@mipmap/cartoon" />
+                    app:srcCompat="@drawable/cartoon" />
 
             </RelativeLayout>
 
@@ -143,7 +143,7 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/border"
                     android:scaleType="fitXY"
-                    app:srcCompat="@mipmap/supermarket" />
+                    app:srcCompat="@drawable/supermarket" />
 
             </RelativeLayout>
 

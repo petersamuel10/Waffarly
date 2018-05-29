@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class SuperMarket extends Fragment {
-    View view;
+    private View view;
     private RecyclerView Super_MarketRecyclerView;
     MainRecyclerView m = new MainRecyclerView();
 
@@ -22,7 +22,7 @@ public class SuperMarket extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.laptop, container, false);
 
-        Super_MarketRecyclerView = (RecyclerView)view.findViewById(R.id.superMarketRecyclerView);
+        Super_MarketRecyclerView = view.findViewById(R.id.superMarketRecyclerView);
         Super_MarketRecyclerView.setHasFixedSize(true);
         Super_MarketRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
         Super_MarketRecyclerView.setAdapter(m.getRecycler(container.getContext()));

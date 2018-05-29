@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 
 public class Mobile extends Fragment {
-    View view;
+    private View view;
     private RecyclerView MobileRecyclerView;
     MainRecyclerView m = new MainRecyclerView();
 
@@ -23,7 +23,7 @@ public class Mobile extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.laptop, container, false);
 
-        MobileRecyclerView = (RecyclerView)view.findViewById(R.id.mobileRecyclerView);
+        MobileRecyclerView = view.findViewById(R.id.mobileRecyclerView);
         MobileRecyclerView.setHasFixedSize(true);
         MobileRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
         MobileRecyclerView.setAdapter(m.getRecycler(container.getContext()));

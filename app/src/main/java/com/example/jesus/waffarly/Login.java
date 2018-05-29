@@ -21,10 +21,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
-    EditText login_email;
-    EditText login_password;
-    Button login;
-    TextView register;
+    private EditText loginEmail;
+    private EditText loginPassword;
+    private Button login;
+    private TextView register;
     public FirebaseAuth mAuth;
 
 
@@ -57,8 +57,8 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final ProgressDialog progress = ProgressDialog.show(getApplication(),"Add offer","progress...");
-                String email = login_email.getText().toString();
-                String password = login_password.getText().toString();
+                String email = loginEmail.getText().toString();
+                String password = loginPassword.getText().toString();
 
                 if(!TextUtils.isEmpty(email)&&!TextUtils.isEmpty(password)) {
                     mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -71,7 +71,6 @@ public class Login extends AppCompatActivity {
                             }else
                             {
                                 Toast.makeText(Login.this,"Error "+task.getException().getMessage(),Toast.LENGTH_LONG).show();
-
                             }
                         }
                     });
@@ -92,10 +91,10 @@ public class Login extends AppCompatActivity {
     }
 
     private void reference() {
-        login_email=(EditText)findViewById(R.id.log_email);
-        login_password=(EditText)findViewById(R.id.log_password);
-        login=(Button)findViewById(R.id.login);
-        register=(TextView)findViewById(R.id.register);
+        loginEmail=findViewById(R.id.log_email);
+        loginPassword=findViewById(R.id.log_password);
+        login=findViewById(R.id.login);
+        register=findViewById(R.id.register);
         mAuth = FirebaseAuth.getInstance();
 
     }

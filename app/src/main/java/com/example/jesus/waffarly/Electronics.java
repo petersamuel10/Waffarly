@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class Electronics extends Fragment {
-    View view;
+    private View view;
     private RecyclerView ElectronicsRecyclerView;
     MainRecyclerView m = new MainRecyclerView();
 
@@ -21,7 +21,7 @@ public class Electronics extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.laptop, container, false);
 
-        ElectronicsRecyclerView = (RecyclerView)view.findViewById(R.id.electronicsRecyclerView);
+        ElectronicsRecyclerView = view.findViewById(R.id.electronicsRecyclerView);
         ElectronicsRecyclerView.setHasFixedSize(true);
         ElectronicsRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
         ElectronicsRecyclerView.setAdapter(m.getRecycler(container.getContext()));

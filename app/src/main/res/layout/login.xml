@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/m1">
+        android:background="@drawable/m1">
 
         <ImageView
             android:id="@+id/imageView"
@@ -17,7 +17,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:src="@mipmap/m6" />
+            android:src="@drawable/m6" />
 
         <RelativeLayout
             android:id="@+id/login_template"
@@ -38,7 +38,7 @@
                 android:layout_marginTop="30dp"
                 android:background="@drawable/input_background"
                 android:ems="10"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:paddingBottom="10dp"
                 android:paddingLeft="25dp"
@@ -56,7 +56,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/input_background"
                 android:ems="10"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:paddingBottom="10dp"
                 android:paddingLeft="25dp"
@@ -82,8 +82,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/login_btn"
-                android:text="Log in To My Account"
-                android:textColor="#ffff"
+                android:text="@string/loginBtn"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -95,11 +95,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textColor="#ffff"
+            android:textColor="@color/white"
             android:layout_below="@+id/login_template"
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
-            android:text="Create new account" />
+            android:text="@string/createAccountBtn" />
 
     </RelativeLayout>
 

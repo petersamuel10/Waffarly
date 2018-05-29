@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -34,17 +33,17 @@ import com.google.firebase.storage.StorageReference;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
-    CircleImageView main_profile;
-    public static TextView user_title_name;
-    View header;
-    CircleImageView nv_profile;
-    TextView nv_user_name;
-    ImageView clothes;
-    ImageView shoes;
-    ImageView laptop;
-    ImageView electronics;
-    ImageView mobile;
-    ImageView supermarket;
+    private CircleImageView mainProfile;
+    public static TextView userTitleName;
+    private View header;
+    private CircleImageView nvProfile;
+    private TextView nvUserName;
+    private ImageView clothes;
+    private ImageView shoes;
+    private ImageView laptop;
+    private ImageView electronics;
+    private ImageView mobile;
+    private ImageView supermarket;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private StorageReference storageRef;
@@ -55,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
 
     // Create a new fragment and specify the fragment to show based on nav item clicked
-    Fragment fragment = null;
-    Class fragmentClass;
+    private Fragment fragment = null;
+    private Class fragmentClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         reference();
 
         //check login
-       ifLogin();
+       checkRegister();
+       // set topic to can receive notification
         FirebaseMessaging.getInstance().subscribeToTopic("notifications");
         // Set a Toolbar to replace the ActionBar.
         setSupportActionBar(toolbar);
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass =SuperMarket.class;
                 break;
             case R.id.add:
-                fragmentClass =Add_Offer.class;
+                fragmentClass =AddOffer.class;
                 break;
             case R.id.logout:
                 mAuth.signOut();
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         // Highlight the selected item has been done by NavigationView
         item.setChecked(true);
         // Set action bar title to all fragment expect Home show the user name
-        user_title_name.setText(item.getTitle());
+        userTitleName.setText(item.getTitle());
         // Close the navigation drawer
         mDrawer.closeDrawers();
     }
@@ -177,25 +177,25 @@ public class MainActivity extends AppCompatActivity {
     private void reference() {
 
         //for toolbar
-        main_profile = (CircleImageView)findViewById(R.id.main_profile);
-        user_title_name = (TextView)findViewById(R.id.user_title_name);
+        mainProfile =findViewById(R.id.main_profile);
+        userTitleName = findViewById(R.id.user_title_name);
 
-        clothes =(ImageView)findViewById(R.id.clothes_btn);
-        shoes =(ImageView)findViewById(R.id.shoes);
-        laptop =(ImageView)findViewById(R.id.laptop);
-        electronics =(ImageView)findViewById(R.id.electronics);
-        mobile =(ImageView)findViewById(R.id.mobile);
-        supermarket =(ImageView)findViewById(R.id.superMarket);
+        clothes =findViewById(R.id.clothes_btn);
+        shoes =findViewById(R.id.shoes);
+        laptop =findViewById(R.id.laptop);
+        electronics =findViewById(R.id.electronics);
+        mobile =findViewById(R.id.mobile);
+        supermarket =findViewById(R.id.superMarket);
 
-        mDrawer=(DrawerLayout)findViewById(R.id.drawer);
+        mDrawer=findViewById(R.id.drawer);
 
-        nvDrawer=(NavigationView)findViewById(R.id.nvView);
-        toolbar= (Toolbar) findViewById(R.id.toolbar);
+        nvDrawer=findViewById(R.id.nvView);
+        toolbar= findViewById(R.id.toolbar);
 
         header = nvDrawer.inflateHeaderView(R.layout.nv_header);
 
     }
-    private void ifLogin() {
+    private void checkRegister() {
 
         mAuth=FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -218,15 +218,15 @@ public class MainActivity extends AppCompatActivity {
         storageRef = FirebaseStorage.getInstance().getReference().child("images/"+user_id+".jpg");
 
         // for navigation header drawer
-           nv_profile =(CircleImageView) header.findViewById(R.id.nv_profile_header);
-           nv_user_name = (TextView) header.findViewById(R.id.nv_user_name_header);
+           nvProfile =(CircleImageView) header.findViewById(R.id.nv_profile_header);
+           nvUserName = (TextView) header.findViewById(R.id.nv_user_name_header);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-               user_title_name.setText(dataSnapshot.child("Users").child(user_id).child("name").getValue(String.class));
-               nv_user_name.setText(user_title_name.getText());
+               userTitleName.setText(dataSnapshot.child("Users").child(user_id).child("name").getValue(String.class));
+               nvUserName.setText(userTitleName.getText());
             }
 
             @Override
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //load profile picture
-          Glide.with(this).using(new FirebaseImageLoader()).load(storageRef).into(main_profile);
-          Glide.with(this).using(new FirebaseImageLoader()).load(storageRef).into(nv_profile);
+          Glide.with(this).using(new FirebaseImageLoader()).load(storageRef).into(mainProfile);
+          Glide.with(this).using(new FirebaseImageLoader()).load(storageRef).into(nvProfile);
     }
 }

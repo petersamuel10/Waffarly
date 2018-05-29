@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class Clothes extends Fragment {
-    View view;
+    private View view;
     private RecyclerView ClothesRecyclerView;
     MainRecyclerView m = new MainRecyclerView();
 
@@ -21,7 +21,7 @@ public class Clothes extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
          view=inflater.inflate(R.layout.clothes, container, false);
-        ClothesRecyclerView = (RecyclerView)view.findViewById(R.id.clothesRecyclerView);
+        ClothesRecyclerView = view.findViewById(R.id.clothesRecyclerView);
         ClothesRecyclerView.setHasFixedSize(true);
         ClothesRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
         ClothesRecyclerView.setAdapter(m.getRecycler(container.getContext()));

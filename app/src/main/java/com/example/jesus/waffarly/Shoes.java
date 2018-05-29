@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 
 public class Shoes extends Fragment {
-    View view;
+    private View view;
     private RecyclerView ShopRecyclerView;
     MainRecyclerView m = new MainRecyclerView();
 
@@ -23,7 +23,7 @@ public class Shoes extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.laptop, container, false);
 
-        ShopRecyclerView = (RecyclerView)view.findViewById(R.id.shoesRecyclerView);
+        ShopRecyclerView = view.findViewById(R.id.shoesRecyclerView);
         ShopRecyclerView.setHasFixedSize(true);
         ShopRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
         ShopRecyclerView.setAdapter(m.getRecycler(container.getContext()));

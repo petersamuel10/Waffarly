@@ -6,14 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by jesus on 5/12/2018.
@@ -51,16 +46,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         final RecyclerModel item_data = myList.get(position);
         // Set item views based on your views and data model
-        TextView name = holder.item_name;
+        TextView name = holder.itemName;
         name.setText(item_data.getName());
-        TextView summary = holder.item_summary;
+        TextView summary = holder.itemSummary;
         summary.setText(item_data.getSummary());
 
         // send item details and open it when click on item recycler view
-         holder.item_view.setOnClickListener(new View.OnClickListener() {
+         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent item_details = new Intent(mContext,Item_Details.class);
+                Intent item_details = new Intent(mContext,ItemDetails.class);
                 item_details.putExtra("item",
                         new String[]{item_data.getImage(),item_data.getName(),item_data.getDescription()
                                 ,item_data.getAddress(),item_data.getLongitude(),item_data.getLatitude()});
@@ -78,15 +73,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder
     {
 
-        public View item_view;
-        public TextView item_name;
-        public TextView item_summary;
+        public View itemView;
+        public TextView itemName;
+        public TextView itemSummary;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            item_view = itemView;
-            item_name = (TextView)item_view.findViewById(R.id.item_name);
-            item_summary = (TextView)item_view.findViewById(R.id.item_summary);
+            itemView = itemView;
+            itemName = itemView.findViewById(R.id.item_name);
+            itemSummary = itemView.findViewById(R.id.item_summary);
         }
     }
 

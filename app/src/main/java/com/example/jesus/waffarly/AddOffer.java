@@ -58,25 +58,25 @@ import java.util.concurrent.Executor;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.app.Activity.RESULT_OK;
 
-public class Add_Offer extends Fragment implements View.OnClickListener {
-    View v;
-    ImageView imageView;
-    ImageView location;
-    Spinner category;
-    EditText nameEt;
-    EditText summaryEt;
-    EditText descriptionEt;
-    EditText addressEt;
-    Button add;
-    String name;
-    String description;
-    String address;
-    String summary;
-    String categoryName;
-    Uri imageViewLink = null;
-    String longitude;
-    String latitude;
-    ProgressDialog progress;
+public class AddOffer extends Fragment implements View.OnClickListener {
+    private View v;
+    private ImageView imageView;
+    private ImageView location;
+    private Spinner category;
+    private EditText nameEt;
+    private EditText summaryEt;
+    private EditText descriptionEt;
+    private EditText addressEt;
+    private Button add;
+    private String name;
+    private String description;
+    private String address;
+    private String summary;
+    private String categoryName;
+    private Uri imageViewLink = null;
+    private String longitude;
+    private String latitude;
+    private ProgressDialog progress;
 
     private FirebaseFirestore firestore;
     private StorageReference storageReference;
@@ -327,7 +327,7 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
             path = MediaStore.Images.Media.insertImage(context.getContentResolver(), thumbnail, "title", null);
 
         } catch (Exception e) {
-            Toast.makeText(this.getContext(), "mmmmm " + e.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(),"ERROR : " + e.toString(), Toast.LENGTH_LONG).show();
         }
         return Uri.parse(path);
     }
@@ -343,15 +343,14 @@ public class Add_Offer extends Fragment implements View.OnClickListener {
     }
 
     private void reference() {
-        category = (Spinner) v.findViewById(R.id.category);
-        category.setPrompt("Choose Category");
-        imageView = (ImageView) v.findViewById(R.id.offer_image);
-        nameEt = (EditText) v.findViewById(R.id.name);
-        addressEt = (EditText) v.findViewById(R.id.address);
-        descriptionEt = (EditText) v.findViewById(R.id.description);
-        summaryEt = (EditText) v.findViewById(R.id.summary);
-        location = (ImageView) v.findViewById(R.id.location);
-        add = (Button) v.findViewById(R.id.add);
+        category = v.findViewById(R.id.category);
+        imageView = v.findViewById(R.id.offer_image);
+        nameEt = v.findViewById(R.id.name);
+        addressEt = v.findViewById(R.id.address);
+        descriptionEt = v.findViewById(R.id.description);
+        summaryEt =v.findViewById(R.id.summary);
+        location = v.findViewById(R.id.location);
+        add = v.findViewById(R.id.add);
         firestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
     }

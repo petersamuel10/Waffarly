@@ -15,7 +15,7 @@
         android:layout_height="60dp"
         android:scaleType="centerCrop"
         android:layout_marginTop="2sp"
-        android:src="@mipmap/icon6x"/>
+        android:src="@drawable/icon6x"/>
 
     <TextView
     android:id="@+id/item_name"
@@ -26,18 +26,18 @@
     android:padding="5dp"
     android:text="HM"
     android:textStyle="bold"
-    android:textColor="#fc9e00"
+    android:textColor="@color/textColor"
     android:textSize="18sp"/>
     <TextView
         android:id="@+id/item_summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/item_image"
+        android:layout_toEndOf="@+id/item_image"
         android:layout_alignParentBottom="true"
         android:paddingBottom="5dp"
         android:layout_marginLeft="7dp"
-        android:text="summary"
+        android:text="@string/summaryHint"
         android:textSize="14dp"
-        android:textColor="#000"/>
+        android:textColor="@color/black"/>
 </RelativeLayout>
 </RelativeLayout>

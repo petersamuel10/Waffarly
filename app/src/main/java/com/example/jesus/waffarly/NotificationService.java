@@ -15,7 +15,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class NotificationService extends FirebaseMessagingService {
 
-    String title,body,Ntitle,Nbody;
+    private String title,body,NTitle,NBody;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -25,24 +25,19 @@ public class NotificationService extends FirebaseMessagingService {
         }
         if(remoteMessage.getNotification()!=null)
         {
-            Ntitle = remoteMessage.getNotification().getTitle();
-            Nbody = remoteMessage.getNotification().getBody();
+            NTitle = remoteMessage.getNotification().getTitle();
+            NBody = remoteMessage.getNotification().getBody();
         }
-        sendNotification(Ntitle,Nbody);
+        sendNotification(NTitle,NBody);
     }
 
-    private void sendNotification(String ntitle, String nbody) {
-/*
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-*/
+    private void sendNotification(String NTitle, String NBody) {
+
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(Ntitle)
-                .setContentText(Nbody)
+                .setContentTitle(NTitle)
+                .setContentText(NBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri);
                // .setContentIntent(pendingIntent);
