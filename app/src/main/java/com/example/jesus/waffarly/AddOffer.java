@@ -10,20 +10,16 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,21 +27,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.appindexing.builders.StickerBuilder;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,9 +40,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
-import java.util.concurrent.Executor;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.app.Activity.RESULT_OK;
 
 public class AddOffer extends Fragment implements View.OnClickListener {
@@ -124,8 +109,7 @@ public class AddOffer extends Fragment implements View.OnClickListener {
                 //get Longitude and Latitude for the company location
                 ConfigureButton();
                 break;
-
-            case R.id.add:
+            default:
                 // add offer to the database
                 saveOffer();
                 break;
@@ -134,8 +118,10 @@ public class AddOffer extends Fragment implements View.OnClickListener {
     }
 
     private void saveOffer() {
-        if (imageViewLink != null) {
-
+        if (imageViewLink == null) {
+            Toast.makeText(this.getContext(), "Please select a picture", Toast.LENGTH_LONG).show();
+        } else
+        {
             //get data from UI
             categoryName = category.getSelectedItem().toString();
             name = nameEt.getText().toString();
@@ -178,14 +164,12 @@ public class AddOffer extends Fragment implements View.OnClickListener {
                 }
             } else
                 Toast.makeText(this.getContext(), "Please fill missed field", Toast.LENGTH_LONG).show();
-        } else
-            Toast.makeText(this.getContext(), "Please select a picture", Toast.LENGTH_LONG).show();
+        }
 
 
     }
 
     private void Clear() {
-        Toast.makeText(this.getContext(), "dooooone", Toast.LENGTH_LONG).show();
         nameEt.setText("");
         addressEt.setText("");
         descriptionEt.setText("");
@@ -207,11 +191,13 @@ public class AddOffer extends Fragment implements View.OnClickListener {
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
 
+                //code
             }
 
             @Override
             public void onProviderEnabled(String s) {
 
+                //code
             }
 
             @Override
@@ -224,7 +210,6 @@ public class AddOffer extends Fragment implements View.OnClickListener {
             requestPermissions(new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET
             }, 10);
-            return;
         }else
         {
             ConfigureButton();
@@ -234,8 +219,8 @@ public class AddOffer extends Fragment implements View.OnClickListener {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 10:
+
+        if (requestCode==10) {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     ConfigureButton();
                 return;
@@ -255,7 +240,7 @@ public class AddOffer extends Fragment implements View.OnClickListener {
                     return;
                 }
                 locationManager.requestLocationUpdates("gps", 1000, 0, locationListener);
-               // Toast.makeText(getContext(), longitude+"/"+latitude, Toast.LENGTH_LONG).show();
+
     }
 
 
@@ -268,53 +253,45 @@ public class AddOffer extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                switch (i) {
-                    case 0:
-                        // select image from Gallery
-                        startActivityForResult(new Intent(Intent.ACTION_PICK,
-                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 0);
-                        break;
+                if (i==0) {
+                    // select image from Gallery
+                    startActivityForResult(new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 0);
+                }else {
+                    // capture new picture
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivityForResult(takePictureIntent, 1);
 
-                    case 1:
-                        // capture new picture
-                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                            startActivityForResult(takePictureIntent,1);
-
-                        }
-                        //startActivityForResult(intent,CAMERA_REQUEST_CODE);
-
-                        break;
-                }
-            }
+                    }
+                }                }
         });
         takePicture.show();
     }
+
 // result activity for taking pic from gallery or camera
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 0:
-                if (resultCode == RESULT_OK) {
-                    imageViewLink = data.getData();
-                    imageView.setImageURI(imageViewLink);
-                }
-                break;
-            case 1:
+        if (requestCode==0) {
+            if (resultCode == RESULT_OK) {
+                imageViewLink = data.getData();
+                imageView.setImageURI(imageViewLink);
+            }
+        }else {
 
-                if (resultCode == RESULT_OK) {
-                    try {
-                          Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-                         // save capture picture to internal storage and get the Uri
-                          imageViewLink = getImageURI(this.getContext(),thumbnail);
-                          imageView.setImageURI(imageViewLink);
-                    } catch (Exception e) {
-                        Toast.makeText(getContext(), "eEEee" + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+            if (resultCode == RESULT_OK) {
+                try {
+                    Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+                    // save capture picture to internal storage and get the Uri
+                    imageViewLink = getImageURI(this.getContext(), thumbnail);
+                    imageView.setImageURI(imageViewLink);
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "eEEee" + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-                break;
+            }
         }
+
     }
 
     // get uri from Bitmap image captured from camera
@@ -327,7 +304,7 @@ public class AddOffer extends Fragment implements View.OnClickListener {
             path = MediaStore.Images.Media.insertImage(context.getContentResolver(), thumbnail, "title", null);
 
         } catch (Exception e) {
-            Toast.makeText(this.getContext(),"ERROR : " + e.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(),"ERROR : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
         return Uri.parse(path);
     }
@@ -335,7 +312,7 @@ public class AddOffer extends Fragment implements View.OnClickListener {
     private void spinner() {
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        // the third argument is to specify which layout to show selected choice in spinnner
+        // the third argument is to specify which layout to show selected choice in spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.category, android.R.layout.simple_spinner_item);
         // specify how tho show adapter items
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);

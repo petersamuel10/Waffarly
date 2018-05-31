@@ -1,6 +1,7 @@
 package com.example.jesus.waffarly;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -10,11 +11,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -38,12 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private View header;
     private CircleImageView nvProfile;
     private TextView nvUserName;
-    private ImageView clothes;
-    private ImageView shoes;
-    private ImageView laptop;
-    private ImageView electronics;
-    private ImageView mobile;
-    private ImageView supermarket;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private StorageReference storageRef;
@@ -136,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             default:
                     fragmentClass =Home.class;
+                    break;
 
         }
 
@@ -166,8 +160,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
-        switch (item.getItemId()) {
-            case android.R.id.home:
+        if (item.getItemId()== android.R.id.home ) {
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
         }
@@ -179,19 +172,9 @@ public class MainActivity extends AppCompatActivity {
         //for toolbar
         mainProfile =findViewById(R.id.main_profile);
         userTitleName = findViewById(R.id.user_title_name);
-
-        clothes =findViewById(R.id.clothes_btn);
-        shoes =findViewById(R.id.shoes);
-        laptop =findViewById(R.id.laptop);
-        electronics =findViewById(R.id.electronics);
-        mobile =findViewById(R.id.mobile);
-        supermarket =findViewById(R.id.superMarket);
-
         mDrawer=findViewById(R.id.drawer);
-
         nvDrawer=findViewById(R.id.nvView);
         toolbar= findViewById(R.id.toolbar);
-
         header = nvDrawer.inflateHeaderView(R.layout.nv_header);
 
     }
@@ -199,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth=FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-
 
         //login with the recent login user
         FirebaseUser current_User = mAuth.getCurrentUser();

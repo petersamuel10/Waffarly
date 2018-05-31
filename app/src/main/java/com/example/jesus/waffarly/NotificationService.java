@@ -34,13 +34,13 @@ public class NotificationService extends FirebaseMessagingService {
     private void sendNotification(String NTitle, String NBody) {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(NTitle)
                 .setContentText(NBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri);
-               // .setContentIntent(pendingIntent);
+
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

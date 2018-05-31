@@ -38,7 +38,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return viewHolder;
     }
 
-
     // Involves populating data into the item through holder
     // draw views and bind data on it
     @Override
@@ -77,9 +76,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public TextView itemName;
         public TextView itemSummary;
 
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            itemView = itemView;
+        public MyViewHolder(View itemView1) {
+            super(itemView1);
+            itemView = itemView1;
             itemName = itemView.findViewById(R.id.item_name);
             itemSummary = itemView.findViewById(R.id.item_summary);
         }

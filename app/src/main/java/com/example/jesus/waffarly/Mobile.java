@@ -1,7 +1,5 @@
 package com.example.jesus.waffarly;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +13,7 @@ import android.view.ViewGroup;
 public class Mobile extends Fragment {
     private View view;
     private RecyclerView MobileRecyclerView;
-    MainRecyclerView m = new MainRecyclerView();
+    MainRecyclerView mainRecyclerView = new MainRecyclerView();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,7 +24,7 @@ public class Mobile extends Fragment {
         MobileRecyclerView = view.findViewById(R.id.mobileRecyclerView);
         MobileRecyclerView.setHasFixedSize(true);
         MobileRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        MobileRecyclerView.setAdapter(m.getRecycler(container.getContext()));
+        MobileRecyclerView.setAdapter(mainRecyclerView.getRecycler(container.getContext()));
 
         return view;
     }
@@ -34,6 +32,6 @@ public class Mobile extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        m.getData("Mobile",getActivity());
+        mainRecyclerView.getData("Mobile",getActivity());
     }
 }

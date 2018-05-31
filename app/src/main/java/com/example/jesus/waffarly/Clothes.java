@@ -1,7 +1,5 @@
 package com.example.jesus.waffarly;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +11,7 @@ import android.view.ViewGroup;
 public class Clothes extends Fragment {
     private View view;
     private RecyclerView ClothesRecyclerView;
-    MainRecyclerView m = new MainRecyclerView();
+    MainRecyclerView mainRecyclerView = new MainRecyclerView();
 
 
     @Override
@@ -24,7 +22,7 @@ public class Clothes extends Fragment {
         ClothesRecyclerView = view.findViewById(R.id.clothesRecyclerView);
         ClothesRecyclerView.setHasFixedSize(true);
         ClothesRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        ClothesRecyclerView.setAdapter(m.getRecycler(container.getContext()));
+        ClothesRecyclerView.setAdapter(mainRecyclerView.getRecycler(container.getContext()));
 
     return view;
     }
@@ -32,6 +30,6 @@ public class Clothes extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        m.getData("Clothes",getActivity());
+        mainRecyclerView.getData("Clothes",getActivity());
     }
 }

@@ -1,7 +1,5 @@
 package com.example.jesus.waffarly;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,19 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-
 public class Laptop extends Fragment {
 
     private View view;
     private RecyclerView laptopRecyclerView;
-    MainRecyclerView m = new MainRecyclerView();
+    MainRecyclerView mainRecyclerView = new MainRecyclerView();
 
 
     @Override
@@ -33,7 +23,7 @@ public class Laptop extends Fragment {
         laptopRecyclerView = view.findViewById(R.id.laptopRecyclerView);
         laptopRecyclerView.setHasFixedSize(true);
         laptopRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        laptopRecyclerView.setAdapter(m.getRecycler(container.getContext()));
+        laptopRecyclerView.setAdapter(mainRecyclerView.getRecycler(container.getContext()));
 
         return view;
     }
@@ -41,6 +31,6 @@ public class Laptop extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        m.getData("Laptop",getActivity());
+        mainRecyclerView.getData("Laptop",getActivity());
     }
 }

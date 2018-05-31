@@ -11,8 +11,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import static java.security.AccessController.getContext;
-
 /**
  * Created by jesus on 5/19/2018.
  */
@@ -22,7 +20,7 @@ public class MainRecyclerView {
     private ArrayList<RecyclerModel> List;
     private RecyclerViewAdapter RecyclerAdapter;
     private FirebaseFirestore firestore;
-    RecyclerModel model;
+    private RecyclerModel model;
 
     public RecyclerViewAdapter getRecycler(Context context)
     {
@@ -44,7 +42,6 @@ public class MainRecyclerView {
 
                     if (doc.getType() == DocumentChange.Type.ADDED)
                     {
-
                         model = doc.getDocument().toObject(RecyclerModel.class);
                         List.add(model);
                         RecyclerAdapter.notifyDataSetChanged();

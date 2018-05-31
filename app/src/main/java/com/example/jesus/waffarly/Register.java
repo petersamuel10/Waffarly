@@ -3,9 +3,9 @@ package com.example.jesus.waffarly;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -69,8 +69,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.save: {
-
+            case R.id.save:
                 name = registerUserName.getText().toString();
                 email = registerEmail.getText().toString();
                 password = registerPassword.getText().toString();
@@ -78,9 +77,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 try {
 
                     if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-                         progress = ProgressDialog.show(getApplication(),"Add offer","progress...");
-                       // Toast.makeText(Register.this, name + email + password + profile_Uri.toString(), Toast.LENGTH_LONG).show();
-                        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                         progress = ProgressDialog.show(getApplication(),"Register","progress...");
+                         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
 
@@ -93,18 +91,16 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                         @Override
                                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
-                                            progress.dismiss();
-                                            Toast.makeText(Register.this, "Register Completed Successfully", Toast.LENGTH_LONG).show();
                                             String image_uri = task.getResult().getDownloadUrl().toString();
-
                                             HashMap<String, Object> user = new HashMap<>();
                                             user.put("name", name);
                                             user.put("id", user_id);
                                             user.put("image_uri", image_uri);
 
                                             database.child("Users").child(user_id).setValue(user);
+                                            progress.dismiss();
+                                            Toast.makeText(Register.this, "Register Completed Successfully", Toast.LENGTH_LONG).show();
 
-                                            Toast.makeText(Register.this, "datttttttta", Toast.LENGTH_LONG).show();
                                             startActivity(new Intent(Register.this, MainActivity.class));
                                             finish();
                                         }
@@ -112,24 +108,24 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                 }
                                 }
                         });
-                    }
+                    }else
+                        Toast.makeText(Register.this,"Please enter the above fields",Toast.LENGTH_SHORT).show();
 
                 } catch (Exception e) {
                     progress.dismiss();
                     Toast.makeText(getApplication(), "ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            }
-
-            case R.id.cancel:
-                startActivity(new Intent(getApplication(),Login.class));
-                finish();
-                break;
-
+            break;
             case R.id.profile:
                 Intent i = new Intent();
                 i.setType("image/*");
                 i.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(i,"choose profile pic"),PICK_IMAGE);
+                break;
+            default:
+            case R.id.cancel:
+                startActivity(new Intent(getApplication(),Login.class));
+                finish();
                 break;
         }
     }

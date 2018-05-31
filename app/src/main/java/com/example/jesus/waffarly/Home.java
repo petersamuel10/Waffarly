@@ -1,13 +1,9 @@
 package com.example.jesus.waffarly;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,41 +38,45 @@ public class Home extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
 
-        MainActivity m = new MainActivity();
-        Class fragmentClass = null;
+        Class fragmentClass;
         int id = view.getId();
 
         switch (id)
         {
             case R.id.clothes_btn:
                 fragmentClass = Clothes.class;
-                m.nvDrawer.getMenu().getItem(1).setChecked(true);
-                m.userTitleName.setText(m.nvDrawer.getMenu().getItem(1).getTitle());
+                MainActivity.nvDrawer.getMenu().getItem(1).setChecked(true);
+                MainActivity.userTitleName.setText(MainActivity.nvDrawer.getMenu().getItem(1).getTitle());
                 break;
             case R.id.shoes:
                 fragmentClass = Shoes.class;
-                m.nvDrawer.getMenu().getItem(2).setChecked(true);
-                m.userTitleName.setText(m.nvDrawer.getMenu().getItem(2).getTitle());
+                MainActivity.nvDrawer.getMenu().getItem(2).setChecked(true);
+                MainActivity.userTitleName.setText(MainActivity.nvDrawer.getMenu().getItem(2).getTitle());
                 break;
             case R.id.laptop:
                 fragmentClass = Laptop.class;
-                m.nvDrawer.getMenu().getItem(3).setChecked(true);
-                m.userTitleName.setText(m.nvDrawer.getMenu().getItem(3).getTitle());
+                MainActivity.nvDrawer.getMenu().getItem(3).setChecked(true);
+                MainActivity.userTitleName.setText(MainActivity.nvDrawer.getMenu().getItem(3).getTitle());
                 break;
             case R.id.electronics:
                 fragmentClass = Electronics.class;
-                m.nvDrawer.getMenu().getItem(4).setChecked(true);
-                m.userTitleName.setText(m.nvDrawer.getMenu().getItem(4).getTitle());
+                MainActivity.nvDrawer.getMenu().getItem(4).setChecked(true);
+                MainActivity.userTitleName.setText(MainActivity.nvDrawer.getMenu().getItem(4).getTitle());
                 break;
             case R.id.mobile:
                 fragmentClass = Mobile.class;
-                m.nvDrawer.getMenu().getItem(5).setChecked(true);
-                m.userTitleName.setText(m.nvDrawer.getMenu().getItem(5).getTitle());
+                MainActivity.nvDrawer.getMenu().getItem(5).setChecked(true);
+                MainActivity.userTitleName.setText(MainActivity.nvDrawer.getMenu().getItem(5).getTitle());
                 break;
             case R.id.superMarket:
                 fragmentClass = SuperMarket.class;
-                m.nvDrawer.getMenu().getItem(6).setChecked(true);
-                m.userTitleName.setText(m.nvDrawer.getMenu().getItem(6).getTitle());
+                MainActivity.nvDrawer.getMenu().getItem(6).setChecked(true);
+                MainActivity.userTitleName.setText(MainActivity.nvDrawer.getMenu().getItem(6).getTitle());
+                break;
+            default:
+                fragmentClass = Home.class;
+                MainActivity.nvDrawer.getMenu().getItem(0).setChecked(true);
+                MainActivity.userTitleName.setText(MainActivity.nvDrawer.getMenu().getItem(0).getTitle());
                 break;
         }
         showDesirePage(fragmentClass);
@@ -99,7 +99,6 @@ public class Home extends Fragment implements View.OnClickListener{
 
 
     private void Reference() {
-
         clothes      = content.findViewById(R.id.clothes_btn);
         shoes        = content.findViewById(R.id.shoes);
         superMarket  = content.findViewById(R.id.superMarket);
