@@ -12,4 +12,7 @@ Firebase Database Realtime and cloud firestore ,  <br/>
 Location Manager, <br/>
 Glide,<br/>
 Material design,<br/>
-RecyclerView.
+RecyclerView.<br/>
+Fragment,<br/>
+Navigation drawer.
+
