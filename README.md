@@ -1,4 +1,5 @@
 # Waffarly
+Our aim is to save your money so we will bring good offers for you in (Clothes, Shoes , Mobiles, Electronics, Laptops)<br/>
 This app is help users and companies and shopes to announce about their offers
 # Used
 first you must register to this app by (profile image - user name - email - password) with firebase authentication .<br/>
