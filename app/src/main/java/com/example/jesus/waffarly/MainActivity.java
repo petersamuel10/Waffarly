@@ -12,12 +12,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.example.jesus.waffarly.Categories.Clothes;
+import com.example.jesus.waffarly.Categories.Electronics;
+import com.example.jesus.waffarly.Categories.Laptop;
+import com.example.jesus.waffarly.Categories.Mobile;
+import com.example.jesus.waffarly.Categories.Shoes;
+import com.example.jesus.waffarly.Categories.SuperMarket;
+import com.example.jesus.waffarly.Common.Common;
+import com.example.jesus.waffarly.Model.User;
+import com.example.jesus.waffarly.Service.ListenNewOffer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -57,13 +67,20 @@ public class MainActivity extends AppCompatActivity {
 
         //references
         reference();
+        if(Common.isConnectToTheInternet(getBaseContext())) {
+            //check login
+            checkRegister();
+            // set topic to can receive notification
+            FirebaseMessaging.getInstance().subscribeToTopic("notifications");
+        }else
+            Toast.makeText(getBaseContext(), "Please Check Ihe Internet Connection !!!", Toast.LENGTH_SHORT).show();
 
-        //check login
-       checkRegister();
-       // set topic to can receive notification
-        FirebaseMessaging.getInstance().subscribeToTopic("notifications");
         // Set a Toolbar to replace the ActionBar.
         setSupportActionBar(toolbar);
+
+        //register to notification
+        Intent notification = new Intent(this, ListenNewOffer.class);
+        startService(notification);
 
         // Setup drawer view
         setupDrawerContent(nvDrawer);
@@ -181,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkRegister() {
 
         mAuth=FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
         //login with the recent login user
         FirebaseUser current_User = mAuth.getCurrentUser();
@@ -197,18 +214,27 @@ public class MainActivity extends AppCompatActivity {
     private void loadNameAndProfile() {
 
         user_id = mAuth.getCurrentUser().getUid();
-        storageRef = FirebaseStorage.getInstance().getReference().child("images/"+user_id+".jpg");
+
+
+        storageRef = FirebaseStorage.getInstance().getReference().child("images/"+user_id);
 
         // for navigation header drawer
-           nvProfile =(CircleImageView) header.findViewById(R.id.nv_profile_header);
-           nvUserName = (TextView) header.findViewById(R.id.nv_user_name_header);
+           nvProfile = header.findViewById(R.id.nv_profile_header);
+           nvUserName = header.findViewById(R.id.nv_user_name_header);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+            databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-               userTitleName.setText(dataSnapshot.child("Users").child(user_id).child("name").getValue(String.class));
-               nvUserName.setText(userTitleName.getText());
+                if(dataSnapshot.child(user_id).exists())
+                {
+                    Log.e("id",user_id);
+                    User userInf = dataSnapshot.child(user_id).getValue(User.class);
+                    userTitleName.setText(userInf.getName());
+                    nvUserName.setText(userInf.getName());
+                    //load profile picture
+                    Glide.with(getBaseContext()).load(userInf.getProfileUri()).into(mainProfile);
+                    Glide.with(getBaseContext()).load(userInf.getProfileUri()).into(nvProfile);
+                }
             }
 
             @Override
@@ -216,8 +242,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        //load profile picture
-          Glide.with(this).using(new FirebaseImageLoader()).load(storageRef).into(mainProfile);
-          Glide.with(this).using(new FirebaseImageLoader()).load(storageRef).into(nvProfile);
     }
 }

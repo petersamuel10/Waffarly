@@ -9,6 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.jesus.waffarly.Categories.Clothes;
+import com.example.jesus.waffarly.Categories.Electronics;
+import com.example.jesus.waffarly.Categories.Laptop;
+import com.example.jesus.waffarly.Categories.Mobile;
+import com.example.jesus.waffarly.Categories.Shoes;
+import com.example.jesus.waffarly.Categories.SuperMarket;
+import com.example.jesus.waffarly.Common.Common;
+
 public class Home extends Fragment implements View.OnClickListener{
     private View content;
     private ImageView clothes;
@@ -26,13 +34,14 @@ public class Home extends Fragment implements View.OnClickListener{
         content = inflater.inflate(R.layout.home, container, false);
         //reference
         Reference();
+       // requestPermission();
         clothes.setOnClickListener(this);
         shoes.setOnClickListener(this);
         electronics.setOnClickListener(this);
         mobile.setOnClickListener(this);
         laptop.setOnClickListener(this);
         superMarket.setOnClickListener(this);
-
+        Common.context = getContext();
         return content;
     }
     @Override

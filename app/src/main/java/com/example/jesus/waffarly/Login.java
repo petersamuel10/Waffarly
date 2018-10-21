@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jesus.waffarly.Common.Common;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -33,46 +34,47 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
         //references
         reference();
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplication(),Register.class));
-            finish();
-            }
-        });
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                progress = ProgressDialog.show(Login.this, "Login", "progress...");
-                String email = loginEmail.getText().toString();
-                String password = loginPassword.getText().toString();
-
-                if(!TextUtils.isEmpty(email)&&!TextUtils.isEmpty(password)) {
-                    mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-
-                            if(task.isSuccessful()){
-                                progress.dismiss();
-                                goToMyProfile();
-                            }else
-                            {
-                               progress.dismiss();
-                                Toast.makeText(Login.this,"Error "+task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-
-                }else
-                {
-                    progress.dismiss();
-                    Toast.makeText(Login.this,"Error : Please Enter your email and password ",Toast.LENGTH_LONG).show();
+        if(Common.isConnectToTheInternet(getBaseContext())) {
+            register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getApplication(), Register.class));
+                    finish();
                 }
+            });
+            login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-            }
-        });
+                    progress = ProgressDialog.show(Login.this, "Login", "progress...");
+                    String email = loginEmail.getText().toString();
+                    String password = loginPassword.getText().toString();
 
+                    if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+                        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                if (task.isSuccessful()) {
+                                    progress.dismiss();
+                                    goToMyProfile();
+                                } else {
+                                    progress.dismiss();
+                                    Toast.makeText(Login.this, "Error " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+
+                    } else {
+                        progress.dismiss();
+                        Toast.makeText(Login.this, "Error : Please Enter your email and password ", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            });
+        }
+        else
+            Toast.makeText(getBaseContext(), "Please Check Ihe Internet Connection !!!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

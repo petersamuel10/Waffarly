@@ -18,7 +18,7 @@
         android:src="@drawable/icon6x"/>
 
     <TextView
-    android:id="@+id/item_name"
+    android:id="@+id/item_name_model"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
@@ -29,7 +29,7 @@
     android:textColor="@color/textColor"
     android:textSize="18sp"/>
     <TextView
-        android:id="@+id/item_summary"
+        android:id="@+id/item_summary_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/item_image"

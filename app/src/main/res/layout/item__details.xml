@@ -1,4 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/m4"
+    tools:context="com.example.jesus.waffarly.ItemDetails">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true"
+        >
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="#0e0d0e"
+            app:expandedTitleTextAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+            >
+
+            <ImageView
+                android:id="@+id/item_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cartoon" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin"
+                >
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrolledView"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="10dp">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/nameCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="8dp"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="5dp">
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/image"
+                        android:padding="7dp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Name"
+                        android:textColor="@color/textColor"
+                        android:textSize="20dp" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/ratingBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nameCard"
+                app:cardElevation="8dp"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="5dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="8">
+            <RatingBar
+                android:id="@+id/ratingBarStars"
+                android:rating="0"
+                android:max="5"
+                android:isIndicator="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/ratingStatus"
+                    android:textColor="@android:color/black"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_horizontal"
+                    android:text="vhjcjkb"
+                    android:textStyle="bold"
+                    android:layout_weight="8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/descriptionTitle"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ratingBar"
+                android:paddingLeft="5dp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/descriptionHint"
+                android:textColor="@color/textColor"
+                android:textSize="20dp" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/descriptionTitle"
+                app:cardElevation="8dp"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="5dp">
+
+                <TextView
+                    android:id="@+id/item_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Finally, compile and run the app and you should see something
+                                 compile and run the app and you should see something
+                                 If you create enough ems and scroll through the list, the views will be recycled and far smoother by default than the "
+                    android:textColor="@color/black" />
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/addressTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/description"
+                android:paddingLeft="5dp"
+                android:textStyle="bold"
+                android:text="@string/addressHint"
+                android:textColor="@color/textColor"
+                android:textSize="20dp" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/addresss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="8dp"
+                android:layout_below="@+id/addressTitle"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="5dp">
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="If you createfar smoother by default than the "
+                    android:textColor="@color/black" />
+            </android.support.v7.widget.CardView>
+
+            <ImageView
+                android:id="@+id/locationSite"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/addresss"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="20dp"
+                android:src="@drawable/location" />
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/ratingFb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_star_black_24dp"
+        app:backgroundTint="#FF69B4"
+        app:elevation="4dp"
+        app:layout_anchor="@id/appBar"
+        app:layout_anchorGravity="bottom|right|end"
+        app:pressedTranslationZ="12dp"
+        app:useCompatPadding="true" />
+
+</android.support.design.widget.CoordinatorLayout>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -124,3 +371,6 @@
 </RelativeLayout>
         </ScrollView>
 </RelativeLayout>
+
+
+-->

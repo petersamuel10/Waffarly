@@ -1,20 +1,13 @@
 package com.example.jesus.waffarly;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -30,23 +23,30 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.jesus.waffarly.Common.Common;
+import com.example.jesus.waffarly.Model.Offer;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
+import java.util.Random;
 
+import im.delight.android.location.SimpleLocation;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.app.Activity.RESULT_OK;
 
 public class AddOffer extends Fragment implements View.OnClickListener {
     private View v;
     private ImageView imageView;
-    private ImageView location;
+    private ImageView location,locationChecked;
     private Spinner category;
     private EditText nameEt;
     private EditText summaryEt;
@@ -61,14 +61,16 @@ public class AddOffer extends Fragment implements View.OnClickListener {
     private Uri imageViewLink = null;
     private String longitude;
     private String latitude;
-    private ProgressDialog progress;
+    private ProgressDialog progressDialog;
 
-    private FirebaseFirestore firestore;
+
     private StorageReference storageReference;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
 
-    static final int REQUEST_LOCATION = 2;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
+    byte[] data;
+
+    private SimpleLocation mLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,15 +89,23 @@ public class AddOffer extends Fragment implements View.OnClickListener {
         description = descriptionEt.getText().toString();
         summary = summaryEt.getText().toString();
         address = addressEt.getText().toString();
-        getLocation();
+        mLocation = new SimpleLocation(getContext());
+
+        if(Common.isConnectToTheInternet(getContext())) {
+        //    if (!mLocation.hasLocationEnabled())
+        //      SimpleLocation.openSettings(getContext());
         // set OnClick Actions
         imageView.setOnClickListener(this);
         location.setOnClickListener(this);
         add.setOnClickListener(this);
 
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("Offer");
+    }else
+        Toast.makeText(getContext(), "Please Check Ihe Internet Connection !!!", Toast.LENGTH_SHORT).show();
+
         return v;
     }
-
 
     @Override
     public void onClick(View view) {
@@ -104,10 +114,9 @@ public class AddOffer extends Fragment implements View.OnClickListener {
                 //open dialog to get picture from gallery or open camera
                 selectPicture();
                 break;
-
             case R.id.location:
                 //get Longitude and Latitude for the company location
-                ConfigureButton();
+                getLocation();
                 break;
             default:
                 // add offer to the database
@@ -120,8 +129,7 @@ public class AddOffer extends Fragment implements View.OnClickListener {
     private void saveOffer() {
         if (imageViewLink == null) {
             Toast.makeText(this.getContext(), "Please select a picture", Toast.LENGTH_LONG).show();
-        } else
-        {
+        } else {
             //get data from UI
             categoryName = category.getSelectedItem().toString();
             name = nameEt.getText().toString();
@@ -131,35 +139,39 @@ public class AddOffer extends Fragment implements View.OnClickListener {
 
             if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(summary) && !TextUtils.isEmpty(description) && !TextUtils.isEmpty(address)) {
                 try {
-                    progress = ProgressDialog.show(getContext(), "Add offer", "progress...");
+                    progressDialog = ProgressDialog.show(getContext(), "Add offer", "progress...");
                     StorageReference offer_image = storageReference.child("OffersImages/" + categoryName + "/" + imageViewLink.getLastPathSegment() + ".jpg");
-                    offer_image.putFile(imageViewLink).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            String image_uri = task.getResult().getDownloadUrl().toString();
-                            HashMap<String, Object> offer_details = new HashMap<>();
-                            offer_details.put("image", image_uri);
-                            offer_details.put("name", name);
-                            offer_details.put("description", description);
-                            offer_details.put("summary", summary);
-                            offer_details.put("address", address);
-                            offer_details.put("longitude", longitude);
-                            offer_details.put("latitude", latitude);
 
-                            firestore.collection(categoryName).document(name).set(offer_details).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    progress.dismiss();
-                                    Toast.makeText(getContext(), "Added Success", Toast.LENGTH_LONG).show();
-                                    // clear handle fields
-                                    Clear();
-                                }
-                            });
+                    compressImage();
+                    UploadTask uploadTask = offer_image.putBytes(data);
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            String random = String.valueOf(new Random().nextInt(10000 - 3) + 3);
+                            String uri = taskSnapshot.getDownloadUrl().toString();
+                            Offer offer = new Offer(name, address, description, uri, latitude, longitude, categoryName, summary, random);
+                            ref.child(random).setValue(offer);
+                            Clear();
+                            progressDialog.dismiss();
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressDialog.setMessage("Uploaded " + progress + " %");
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getContext(), "Please Check your Connection", Toast.LENGTH_SHORT).show();
                         }
                     });
                 } catch (Exception e) {
                     Toast.makeText(this.getContext(), "Error " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    progress.dismiss();
+                    progressDialog.dismiss();
 
                 }
             } else
@@ -179,71 +191,38 @@ public class AddOffer extends Fragment implements View.OnClickListener {
 
     //get Longitude and Latitude for the company location
     private void getLocation() {
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
 
-                longitude = String.valueOf(location.getLongitude());
-                latitude  = String.valueOf(location.getLatitude());
-            }
+        requestPermission();
+        if (!mLocation.hasLocationEnabled())
+            SimpleLocation.openSettings(getContext());
+        try {
+            longitude = String.valueOf(mLocation.getLongitude());
+            latitude = String.valueOf(mLocation.getLatitude());
+            Toast.makeText(getContext(), "Failed 1111111111111"+latitude, Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
+            mLocation.setListener(new SimpleLocation.Listener() {
+                @Override
+                public void onPositionChanged() {
+                    mLocation = new SimpleLocation(getContext());
 
-                //code
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-                //code
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        };
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET
-            }, 10);
-        }else
-        {
-            ConfigureButton();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode==10) {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    ConfigureButton();
-                return;
-        }
-    }
-
-    private void ConfigureButton() {
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
+                    longitude = String.valueOf(mLocation.getLongitude());
+                    latitude = String.valueOf(mLocation.getLatitude());
+                    Toast.makeText(getContext(), "Fail55555555555555"+latitude, Toast.LENGTH_SHORT).show();
                 }
-                locationManager.requestLocationUpdates("gps", 1000, 0, locationListener);
+            });
+            if (mLocation == null)
+                Toast.makeText(getContext(), "Failed to find the location", Toast.LENGTH_SHORT).show();
+            else{
+                longitude = String.valueOf(mLocation.getLongitude());
+                latitude = String.valueOf(mLocation.getLatitude());
+                locationChecked.setVisibility(View.VISIBLE);
+            }
 
+            Toast.makeText(getContext(), ""+latitude, Toast.LENGTH_SHORT).show();
+        }catch (Exception e) {
+            Toast.makeText(getContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
-
-
     //open dialog to get picture from gallery or open camera
     private void selectPicture() {
         String[] items = {"select picture from gallery", "take Picture"};
@@ -300,13 +279,24 @@ public class AddOffer extends Fragment implements View.OnClickListener {
         try {
 
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 70, bytes);
             path = MediaStore.Images.Media.insertImage(context.getContentResolver(), thumbnail, "title", null);
 
         } catch (Exception e) {
             Toast.makeText(this.getContext(),"ERROR : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
         return Uri.parse(path);
+    }
+    private void compressImage() {
+
+        //compress image
+
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+        data = byteArrayOutputStream.toByteArray();
     }
 
     private void spinner() {
@@ -319,6 +309,10 @@ public class AddOffer extends Fragment implements View.OnClickListener {
         category.setAdapter(adapter);
     }
 
+    private void requestPermission(){
+        ActivityCompat.requestPermissions(getActivity(),new String[]{ACCESS_COARSE_LOCATION},1);
+        ActivityCompat.requestPermissions(getActivity(),new String[]{ACCESS_FINE_LOCATION},5);
+    }
     private void reference() {
         category = v.findViewById(R.id.category);
         imageView = v.findViewById(R.id.offer_image);
@@ -327,8 +321,8 @@ public class AddOffer extends Fragment implements View.OnClickListener {
         descriptionEt = v.findViewById(R.id.description);
         summaryEt =v.findViewById(R.id.summary);
         location = v.findViewById(R.id.location);
+        locationChecked = v.findViewById(R.id.locationAdded);
         add = v.findViewById(R.id.add);
-        firestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
     }
 

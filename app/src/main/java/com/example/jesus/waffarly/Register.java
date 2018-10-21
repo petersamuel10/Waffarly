@@ -2,9 +2,9 @@ package com.example.jesus.waffarly;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,8 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.jesus.waffarly.Common.Common;
+import com.example.jesus.waffarly.Model.User;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +23,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.HashMap;
+import java.io.ByteArrayOutputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,6 +43,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     public String name;
     public String email;
     public String password;
+    byte[] data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,35 +71,39 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View view) {
 
         switch (view.getId()) {
+
             case R.id.save:
-                name = registerUserName.getText().toString();
-                email = registerEmail.getText().toString();
-                password = registerPassword.getText().toString();
+                if(Common.isConnectToTheInternet(getBaseContext())) {
+                    name = registerUserName.getText().toString();
+                    email = registerEmail.getText().toString();
+                    password = registerPassword.getText().toString();
 
-                try {
+                    try {
+                        progress = new ProgressDialog(this);
+                        progress.setMessage("Register ...!!!");
+                        progress.show();
 
-                    if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-                         progress = ProgressDialog.show(getApplication(),"Register","progress...");
-                         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
 
-                                if (task.isSuccessful()) {
+                            mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    final String userId = mAuth.getCurrentUser().getUid();
+                                    Toast.makeText(Register.this, "dd" + userId, Toast.LENGTH_SHORT).show();
+                                    final StorageReference storageRef = storageReference.child("images/" + userId);
 
-                                    final String user_id = mAuth.getCurrentUser().getUid();
+                                    compressImage();
+                                    UploadTask uploadTask = storageRef.putBytes(data);
+                                    Toast.makeText(Register.this, "" + data.toString(), Toast.LENGTH_SHORT).show();
 
-                                    StorageReference ref = storageReference.child("images/" + user_id + ".jpg");
-                                    ref.putFile(profileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            String uri = taskSnapshot.getDownloadUrl().toString();
 
-                                            String image_uri = task.getResult().getDownloadUrl().toString();
-                                            HashMap<String, Object> user = new HashMap<>();
-                                            user.put("name", name);
-                                            user.put("id", user_id);
-                                            user.put("image_uri", image_uri);
+                                            final User user = new User(name, userId, uri.toString());
+                                            database.child(userId).setValue(user);
 
-                                            database.child("Users").child(user_id).setValue(user);
                                             progress.dismiss();
                                             Toast.makeText(Register.this, "Register Completed Successfully", Toast.LENGTH_LONG).show();
 
@@ -105,16 +111,21 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                                             finish();
                                         }
                                     });
-                                }
-                                }
-                        });
-                    }else
-                        Toast.makeText(Register.this,"Please enter the above fields",Toast.LENGTH_SHORT).show();
 
-                } catch (Exception e) {
-                    progress.dismiss();
-                    Toast.makeText(getApplication(), "ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+                                }
+                            });
+
+                        } else
+                            Toast.makeText(this, "Please fill full Information !!!", Toast.LENGTH_SHORT).show();
+
+                    } catch (Exception e) {
+
+                        progress.dismiss();
+                        Toast.makeText(getApplication(), "ERROR " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }else
+                    Toast.makeText(getBaseContext(), "Please Check Ihe Internet Connection !!!", Toast.LENGTH_SHORT).show();
             break;
             case R.id.profile:
                 Intent i = new Intent();
@@ -130,10 +141,23 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         }
     }
 
+    private void compressImage() {
+
+        //compress image
+
+        profileImage.setDrawingCacheEnabled(true);
+        profileImage.buildDrawingCache();
+        Bitmap bitmap = profileImage.getDrawingCache();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+        data = byteArrayOutputStream.toByteArray();
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==PICK_IMAGE)
+        if(requestCode==PICK_IMAGE && resultCode==RESULT_OK)
         {
             profileUri = data.getData();
             profileImage.setImageURI(profileUri);
@@ -148,8 +172,12 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         createAccount = findViewById(R.id.save);
         backToLogin = findViewById(R.id.cancel);
         mAuth = FirebaseAuth.getInstance();
+
+
         storageReference = FirebaseStorage.getInstance().getReference();
-        database = FirebaseDatabase.getInstance().getReference();
+        database = FirebaseDatabase.getInstance().getReference("Users");
+
     }
 
 }
+
